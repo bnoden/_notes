@@ -1,0 +1,466 @@
+
+yarn run build && firebase deploy
+
+yarn global add serve
+serve -s build
+
+
+
+import { Link } from 'react-router-dom';
+
+React.createElement(element, props, children)
+			ReactDOM.render(componentToRender, targetNode)						// react component
+			ReactDOM.render(<ComponentToRender />, targetNode)				// jsx element
+
+	const greeting = React.createElement("h1", null, "Hello"); 		// <h1>Hello</h1>
+		// element = "h1" = <h1></h1>
+		// props = null
+		// children = "Hello" = Hello
+				ReactDOM.render(greeting, document.getElementById('react-container'));
+
+
+	React.createElement("h1", {
+		id: "one", 'data-type': "title"
+		},
+		"Clam Chowder"
+	);
+		// <h1 data-reactroot id="one" data-type="title">Clam Chowder</h1>
+
+				// element = "h1" = <h1></h1>
+				// props = id, 'data-type' = "one", "title"
+				// children = "Clam Chowder" = Clam Chowder
+
+Stateless functional component:
+
+	const IngredientsList = props =>	//
+		React.createElement("ul", { className: "ingredients" },
+			props.items.map((ingredient, i) =>	//
+				React.createElement("li", { key: i }, ingredient)
+			)
+		)
+
+			Improve it with destructuring:
+
+				const IngredientsList = ({items}) =>													// ({items}) == props
+					React.createElement(
+						"ul", { className: "ingredients" },
+						items.map((ingredient, i) =>															// items.map == props.items.map()
+							React.createElement("li", { key: i }, ingredient)
+						)
+					)
+
+
+
+		function shouldIKeepSomethingInReactState() {
+			if (canCalculateItFromProps) {
+				// Don't duplicate data from props in state.
+				// Calculate what you can in render() method.
+				return false;
+			}
+			if (!isUsedInRenderMethod()) {
+				// Don't keep in state if not used for rendering.
+				// For example, API subscriptions are better off
+				// as custom private fields or variables
+				// in external modules.
+				return false;
+			}
+			// You can use react state for this!
+			return true;
+		}
+
+
+
+Factories
+
+	React.DOM.h1(null, "Clam Chowder");
+
+
+JSX
+		- cannot be read by browser, must be converted into createElement calls or factories
+					Transpile with Babel
+						To transpile code in the browser, use Babel v. 5.8. Babel 6.0+ will not work as an in-browser transformer
+
+	// Array.map() with JSX:
+	<ul>
+		{this.props.ingredients.map((ingredient, i) =>
+			<li key={i}>{ ingredient }</li>
+		)}
+	</ul>
+				// props must be a string or else a JavaScript expression in curly braces
+
+				JSX components can have children:
+					<BookList>
+						<Book />
+						<Book />
+						<Book />
+					</BookList>
+
+
+	Menu Component:
+
+			// element=name, props=ingredients, children=steps
+			const Recipe = ({ name, ingredients, steps }) =>
+
+				// element
+				<section id={name.toLowerCase().replace(/ /g, "-")}>
+					<h1>{name}</h1>
+
+					// props
+					<ul className="ingredients">
+						{ingredients.map((ingredient, i) =>
+							<li key={i}>{ingredient.name}</li>
+						)}
+					</ul>
+
+					// children
+					<section className="instructions">
+						<h2>Cooking Instructions</h2>
+						{steps.map((step, i) =>
+							<p key={i}>{step}</p>
+						)}
+					</section>
+				</section>
+
+
+
+Babel
+
+		Common presets:
+			babel-preset-es2015
+					Compiles ES2015, or ES6, to ES5.
+			babel-preset-es2016
+					Compiles what is in ES2016 to ES2015
+			babel-preset-es2017
+					Compiles what is in ES2017 to ES2017
+			babel-preset-env
+					Compiles everything from ES2015, ES2016, ES2017. A catch-all for the previous three presets
+			babel-preset-react
+					Compiles JSX to React.createElement calls.
+
+			babel-preset-stage-0: Strawman
+			babel-preset-stage-1: Proposal
+			babel-preset-stage-2: Draft
+			babel-preset-stage-3: Candidate
+
+
+
+export const Reflist = busrefs.map((busref) =>
+        <li>{busref}</li>
+    )
+
+HTML elements: lowercase
+React components: uppercase
+
+
+npm install --save passport passport-google-oauth20
+yarn add [package-name]
+yarn remove [package-name]
+yarn install
+	or just yarn
+
+sudo npm install -g webpack
+npm install babel-core babel-loader babel-preset-env babel-preset-react babel-preset-stage-0 --save-dev
+npm install react react-dom --save
+
+localhost:5000/auth/google
+localhost:5000/api/current_user
+
+Docs
+	https://facebook.github.io/react/docs
+	https://facebook.github.io/react/blog/
+	https://mlab.com
+	https://www.vagrantup.com/
+	https://redux-form.com
+		npm install --save redux-form@6.6.3
+
+Event listeners
+	List of valid even names:
+		https://facebook.github.io/react/docs/events.html#supported-events
+
+
+
+
+
+
+
+Notice that the if statement is located inside of the render function,
+but before the return statement. This is pretty much the only way that
+you will ever see an if statement used in a render function.
+
+
+Reducer - Returns a piece of the application state.
+
+if (this.props.children instanceof Array) {
+    	titleText += 's';
+    }
+
+React components always have to call super in their constructors to be
+set up properly.
+
+Whenever you call createClass, extend Component, or simply declare a stateless
+function, you are creating a component. 
+
+In React, whenever you define an event handler that uses this, you need
+to add to constructor:
+	this.methodName = this.methodName.bind(this)
+		or skip that part by using fat arrow to define function instead:
+			methodName = (event) => {}
+
+Any time that you call this.setState(), this.setState() AUTOMATICALLY
+calls .render() as soon as the state has changed.
+
+	Think of this.setState() as actually being two things: this.setState(),
+	immediately followed by .render().
+
+		That is why you can't call this.setState() from inside of the .render()
+		method! this.setState() automatically calls .render(). If .render() calls
+		this.setState(), then an infinite loop is created.
+
+
+A <Parent /> is going to pass a prop to a <Child />.
+	That means that a <Parent /> is going to render a <Child />. Rendering is the
+	only way for a component to pass props to another component.
+		Any component rendered by a different component must be included in an export
+		statement.
+
+call APIs
+	axios -
+		ex:
+		npm install --save axios redux-promise
+
+			import axios from 'axios';
+
+			const API_KEY = 'b55352cd6bb05fa9a3dc32d97928e94c';
+			const ROOT_URL = 'http://api.openweathermap.org/data/2.5/forecast';
+
+			export const FETCH_WEATHER = 'FETCH_WEATHER';
+
+			export function fetchWeather(city) {
+			  const url = `${ROOT_URL}?q=${city},us&appid=${API_KEY}`;
+			  const request = axios.get(url);
+
+			  return { type: FETCH_WEATHER, payload: request };
+			}
+
+
+If you have a component class with nothing but a render function, then you can
+rewrite that component class as JavaScript function.
+
+	A component class written as a function is called a stateless functional component.
+
+		Stateless functional components usually have props passed to them.
+
+			To access these props, give your stateless functional component a parameter.
+				This parameter will automatically be equal to the component's props object.
+					It's customary to name this parameter props. 
+
+
+If you add .isRequired to a propType, then you will get a console warning if that prop isn't sent.
+
+
+In the app a user activity generates an event. The event handler calls the dispatch() function that is sending the current state and an action (object) to the rootReducer(). The action object contains the relevant data for the requested change of state slice. The rootReducer() will interpret the action.type, process the data and generate a new state. After the store has received the new state, it triggers the re-render of the React Redux app. It also triggers the execution of all listener functions that are registered with the subscribe() method to the store. Furthermore, all components that are subscribed with connect(mapStateToProps) to the store now receive the new state data as defined in mapStateToProps().
+
+
+
+Best Practices
+	https://engineering.musefind.com/our-best-practices-for-writing-react-components-dec3eb5c3fc8
+
+	Class Based Components
+
+		stateful and/or contain methods
+		use sparingly
+
+		Importing CSS
+
+			import './styles/ProfileContainer.css'
+
+			Separate dependency imports from local imports by a newline:
+				import React, { Component } from 'react'
+				import { observer } from 'mobx-react'
+
+				import ExpandableForm from './ExpandableForm'
+				import './styles/ProfileContainer.css'
+
+			try https://github.com/styled-components/styled-components
+
+
+		Initializing State
+
+			export default class ProfileContainer extends Component {
+	  		state = { expanded: false }
+	  	}
+
+	  	https://stackoverflow.com/questions/35662932/react-constructor-es6-vs-es7
+
+
+	  propTypes and defaultProps
+
+	  	All components should have propTypes.
+
+	  	static propTypes = {
+		    model: object.isRequired,
+		    title: string
+	  	}
+	 
+		  static defaultProps = {
+		    model: {
+		      id: 0
+		    },
+		    title: 'Your Name'
+		  }
+
+		  propTypes and defaultProps are static properties, declared as high as possible within the component code.
+		  They serve as documentation.
+
+		  If using React 15.3.0 or higher, use the prop-types package instead of React.PropTypes — destructured.
+			
+
+		Methods
+
+			handleSubmit = (e) => {
+		    e.preventDefault()
+		    this.props.model.save()
+		  }
+		  
+		  handleNameChange = (e) => {
+		    this.props.model.changeName(e.target.value)
+		  }
+		  
+		  handleExpand = (e) => {
+		    e.preventDefault()
+		    this.setState({ expanded: !this.state.expanded })
+		  }
+
+
+		Passing setState a Function
+
+			setState is asynchronous. React batches state changes for performance reasons, so the state may not change immediately after setState is called.
+			Do not rely on the current state when calling setState.
+			Instead, pass a function to setState, with the previous state as an argument:
+
+				this.setState(prevState => ({ expanded: !prevState.expanded }))
+
+
+		Destructuring Props
+
+			Components with many props should have each prop on a newline:
+
+				render() {
+			    const {
+			      model,
+			      title
+			    } = this.props
+			    return ( 
+			      <ExpandableForm 
+			        onSubmit={this.handleSubmit} 
+			        expanded={this.state.expanded} 
+			        onExpand={this.handleExpand}>
+			        <div>
+			          <h1>{title}</h1>
+			          <input
+			            type="text"
+			            value={model.name}
+			            onChange={this.handleNameChange}
+			            placeholder="Your Name"/>
+			        </div>
+			      </ExpandableForm>
+			    )
+		  	}
+
+
+		Decorators
+
+			If you’re using something like mobx, you can decorate your class components
+			like so — which is the same as passing the component into a function:
+
+				@observer
+				export default class ProfileContainer extends Component {}
+
+			Decorators are flexible and readable way of modifying component functionality.
+
+			Without decorators:
+
+				class ProfileContainer extends Component {
+				  
+				}
+				export default observer(ProfileContainer)
+
+
+		Closures
+
+			// onChange={(e) => { model.name = e.target.value }}
+	    // ^ Not this. Use the below:
+	       onChange={this.handleChange}
+
+	      Every time the parent component renders, a new function is created and passed to the input.
+				If the input were a React component, this would automatically trigger it to re-render, regardless of whether its other props have actually changed.
+				Reconciliation is the most expensive part of React.
+				Passing a class method is easier to read, debug, and change.
+
+
+	Functional Components
+
+		no state, no methods
+		pure and easy to reason about
+		use often
+
+		propTypes
+
+			ExpandableForm.propTypes = {
+			  onSubmit: func.isRequired,
+			  expanded: bool
+			}
+			// Component declaration
+
+			Assign the propTypes before the component declaration, so they are
+			immediately visible. Made possible by JavaScript function hoisting.
+
+
+		Destructuring Props and defaultProps
+
+			function ExpandableForm(props) {
+			  const formStyle = props.expanded ? {height: 'auto'} : {height: 0}
+			  return (
+			    <form style={formStyle} onSubmit={props.onSubmit}>
+			      {props.children}
+			      <button onClick={props.onExpand}>Expand</button>
+			    </form>
+			  )
+			}
+
+			Our component is a function, which takes its props as its argument.
+			We can expand them like so:
+
+				function ExpandableForm({ onExpand, expanded = false, children, onSubmit }) {
+				  const formStyle = expanded ? {height: 'auto'} : {height: 0}
+				  return (
+				    <form style={formStyle} onSubmit={onSubmit}>
+				      {children}
+				      <button onClick={onExpand}>Expand</button>
+				    </form>
+				  )
+				}
+
+			Avoid: const ExpandableForm = ({ onExpand, expanded, children }) => {}
+				Function is unnamed so errors will show up as occurring in <<anonymous>> 
+
+
+		Wrapping
+
+			You can’t use decorators with functional components, so pass it the function as an argument:
+
+				export default observer(ExpandableForm)
+
+
+	Conditionals in JSX
+
+		Avoid nested ternaries.
+
+		Short-circuit evaluation
+			Use when you only need 1 condition:
+
+				(isTrue ? 1 : 0)
+					becomes
+						(isTrue && 1)
+
+

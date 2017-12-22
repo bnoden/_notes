@@ -1,0 +1,263 @@
+http://starboundsoftware.com/books/c-sharp/try-it-out/
+
+byte	1	0 to 255
+short	2	-32,768 to 32,767
+int		4	-2,147,483,648 to 2,147,483,647
+long	8	-9,223,372,036,854,775,808 to 9,223,372,036,854,775,80
+
+sbyte	1	-128 to +127
+ushort	2	0 to 65,535
+uint	4	0 to 4,294,967,295
+ulong	8	0 to 18,446,744,073,709,551,615
+char 	2	U+0000 to U+ffff (All Unicode characters)
+
+
+
+Comment method descriptions
+	-with XML comments
+
+Value and Reference types
+	int[] a = new int[] {1,2,3};
+	int[] b = a; b[0] = 17;		// now a[0] == 17
+
+Properties
+	simplified in C#:
+		private int score;
+		public int Score {
+			get {return score;}
+			private set {score = value;}	// value is a keyword
+		}
+	even simpler:
+		public int Score {get; set;}
+
+		With above techniques you can now use player.Score instead of player.getScore() and player.setScore(int)
+			also:
+			public class Vector2 {
+				public double X { get; set; } = 0;
+				public double Y { get; set; } = 0;
+			}
+
+	Object initializer syntax:
+		Book book = new Book() { Title = "Frankenstein", Author = "Mary Shelley" };
+
+
+enum - reference type
+class - reference type 
+struct - value type 
+	used to store compound data that does not involve complicated methods and behaviors
+		all the simple types are structs
+		primitive types are all aliases for certain pre-defined structs and classes 
+
+
+Checking object type and casting
+	ex:
+	if (polygon is Square) {
+		Square square = (Square)polygon;
+	}
+
+	The "as" keyword
+		ex:
+		Polygon polygon = new Square(4);
+		Square square = polygon as Square;
+
+	You can create an array of the base class and put any derived class inside of it.
+	In any case where a base class can be used, you can always substitute a derived class.
+		but constructors are not inherited
+
+Sealed class - cannot be inherited
+
+C# does not support multiple inheritance, unlike C++
+
+override changes a virtual method from an abstract base class
+	use base keyword for original implementation
+		example-
+			base.Search()
+	new keyword is for new method with same name as method from base class, but unrelated
+		should be avoided to prevent confusion
+
+Interfaces
+	interface members are always public and abstract
+
+
+Variable number of parameters
+	example - public static double Average(params int[] numbers) {}
+				int[] numbers = new int[5] { 5, 4, 3, 2, 1 };
+				Average(numbers);
+
+double.Epsilon = smallest possible double
+double.Infinity = infinitely large
+double.NaN = !Number
+
+
+String interpolation
+	$"Put {something} in a string"
+	{somebignumber:N0} = number with commas, 0 decimals
+	someprice = 100; {someprice:C} = $100.00
+
+try {to do something}
+catch {if error do this instead}
+
+
+    string fullname = "Saul Goodman"; 
+    int indexOfTheSpace = fullname.IndexOf(' '); 
+    string firstname = fullname.Substring(0, indexOfTheSpace); 
+    string lastname = fullname.Substring(indexOfTheSpace + 1); 
+    WriteLine($"{lastname}, {firstname}");
+
+Avioid concat and "+" for strings
+	Instead using interpolation{} or StringBuilder
+
+Use enum values to store combinatins of discreet options.
+	Derive an enum from byte if there are up to eight options,
+		short if there are up to 16, 
+			int for up to 32,
+				long for up to 64 options.
+
+Use properties instead of fields when you want to validate what value can be stored,
+	when you want to read and write to fields without using methods,
+		when you want to data bind in XAML.
+
+Microsoft has 2 predefined delegates for use as events:
+    public delegate void EventHandler(object sender, EventArgs e);
+    public delegate void EventHandler<TEventArgs>(object sender, TEventArgs e);
+
+
+stack memory and heap memory
+	stack - fast but limited
+	heap - slow but plentiful
+
+	class and struct
+		class - defining a reference type
+			memory allocated on the heap, only the memory address (and some overhead) stored on stack
+			most types are class types, including string
+		struct - define a value type
+			memory allocated on the stack
+				note: if struct uses non-struct types, they're stored on heap
+				note: cannot inherit from struct
+			most common .NET Core struct types:
+				Numbers - byte, short, innt, double, etc.
+				Miscellaneous - char, bool
+				System.Drawing - Color, Point, Rectangle
+			tip: use a struct if:
+				1. a type uses only struct types for its fields, and
+					2. all fields use 16bytes or less of stack memory, and
+						3. nothing will derive from it
+				otherwise probably use class
+
+~SomeClass(){} // Finalizer AKA Destructor
+
+In general it's best to mark class methods and property members as virtual.
+
+Cannot inherit from sealed class
+
+When closing files in .NET Core, always use Dispose() instead of Close()
+
+Common members of Stream class:
+	CanRead, CanWrite
+		determines whether you can read from and write to the stream
+	Length, Position
+		determines the total number of bytes and the current position within the stream
+	Dispose()
+		closes the stream and releases its resources
+	Flush()
+		if the stream has a buffer, then it is cleared and written to the underlying stream
+	Read(), ReadAsync()
+		reads a specified number of bytes from the stream into a byte array and advances the position
+	ReadByte()
+		reads the next byte from the stream and advances the position
+	Seek()
+		moves the position to the specified position (if CanSeek is true)
+	Write(), WriteAsync()
+		writes the contents of a byte array into the stream
+	WriteByte()
+		writes a byte to the stream
+
+	Storage streams:
+		System.IO
+			FileStream
+				stored in filesystem
+			MemoryStream
+				stored in memory in the current process
+		System.Net.Sockets
+			NetworkStream
+				stored at a network location
+
+	Function streams - can only but plugged onto other streams to add functionality
+		System.Security.Cryptography CryptoStream
+			encrypts and decrypts the stream
+		System.IO.Compression GZipStream, DeflateStream
+			compresses and decompresses the stream
+		System.Net.Security AuthenticatedStream
+			sends credentials across the stream
+
+	Helper classes
+		System.IO
+			StreamReader
+				reads from streams as text
+			StreamWriter
+				writes to streams as text
+			BinaryReader
+				reads from streams as .NET types
+			BinaryWriter
+				writes to streams as .NET types
+
+		System.Xml
+			XmlReader
+				reads from streams as XML
+			XmlWriter
+				writes to streams as XML
+
+XmlSerializer
+	only public fields and properties are included
+		the type must have a parameter-less constructor
+			you can customize the output with attributes
+
+Waiting for tasks
+	t.Wait()
+		waits for the task instance named t to complete execution
+	Task.WaitAny(Task[])
+		waits for any of the tasks in the array to complete execution
+	Task.WaitAll(Task[])
+		waits for all the tasks in the array to complete execution
+
+XAML controls:
+	Button, Menu, Toolbar
+		Executing actions
+	CheckBox, RadioButton
+		Choosing options
+	Calendar, DatePicker
+		Choosing dates
+	ComboBox, ListBox, ListView, TreeView
+		Choosing items from lists and hierarchical trees
+	Canvas, DockPanel, Grid, StackPanel, WrapPanel
+		Layout containers that affect their children in different ways
+	Label,TextBlock
+		Displaying read-only text
+	RichTextBox, TextBox
+		Editing text
+	Image, MediaElement
+		Embedding images, videos, and audio files
+	DataGrid
+		Viewing and editing bound data
+	Scrollbar, Slider, StatusBar
+		Miscellaneous user interface elements
+
+ASP.NET Core MVC
+	
+	folders:
+		wwwroot - static content such as CSS, images, javascript, favicon, etc.
+		Data - Entity Framework Core classes used by ASP.NET Identity for authentication/authorization
+		Dependencies = graphical representation of Bower & NuGet for package management.
+			Actual files are bower.json and project solution file (.csproj)
+		Controllers - C# classes with methods (actions) that fetch a Model and pass to View
+		Models - classes that represent all data required to respond to HTTP request
+		Views - .cshtml files, combining HTML and C# code, enabling dynamic HTML response
+		Services - interfaces and classes for integrating with external services, eg. SMS for texts
+
+RESTORE FILELISTONLY
+FROM DISK = 'D:\northwind.bak'
+GO
+
+Northwind
+Northwind_log
+

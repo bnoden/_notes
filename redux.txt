@@ -1,0 +1,94 @@
+Redux
+
+Essentially, Redux brings actions and reducers together. It provides a store,
+which contains the application state and provides some functions:
+		Access the application state: 
+				store.getState()
+		Dispatch actions: 
+				store.dispatch(action)
+		Register listeners: 
+				store.subscribe(listener)
+
+
+
+					  /			Store			\
+	Action > | Reducer > State |
+
+
+
+						const reducer = (state = [], action) => {
+						  if (action.type === 'split_string') {
+						    return action.payload.split('');
+						  } else if (action.type === 'add_char') {
+						  	return [ ...state, action.payload ];
+						  } return state;
+						};
+
+						const store = Redux.createStore(reducer);
+						store.getState();
+
+						const action = { type: 'split_string', payload: 'asdf' };
+
+						store.dispatch(action);
+						store.getState();
+
+						const action2 = {
+							type: 'add_char',
+						  payload: 'a'
+						};
+
+						store.dispatch(action2);
+						store.getState();
+
+
+						function postsReducer (state = [], action {
+							switch (action.type) {
+								case 'CREATE_POST': 
+      						return state.concat([{ user: action.user, text: action.tex
+      					default: 
+      						return state
+							}
+						}
+
+
+			Use map to return new state array:
+
+					const newArr = arr.map(
+					  (elem, index) => { ... }
+					)
+							or
+									const numbers = [1, 2, 3];
+									const newNumbers = numbers.map( number => number + 1 );
+									console.log(newNumbers) // outputs: [2, 3, 4]
+
+
+Three Fundamental Principles of Redux:
+		Single source of truth
+		Read-only state
+		State changes are processed with pure functions
+
+			Other principles:
+				Strictly unidirectional data flow - 
+						- whole cycle has to be completed to make changes in the application state
+
+
+Elements that make of Redux:
+
+			Actions - JavaScript objects, which describe state changes in the application
+									-must have TYPE property, which specifies name of action
+											Actions only describe what happened. Reducers use that information to compute the new state.
+
+			Action creators - Functions that take arguments and return an action
+
+			Reducers - Functions that take the current state and an action, returning the new state
+
+			Store - Stores and guards application state
+								You can subscribe to state changes in the store and dispatch actions to it
+
+
+Tip: Try to structure your application state in such a way that each feature has its own sub-state of data to work on.
+
+
+
+
+

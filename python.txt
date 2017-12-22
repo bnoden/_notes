@@ -1,0 +1,282 @@
+Files and Exceptions
+
+	Opening a file
+		somefile = open(filename, mode)
+			mode - string specifying mode
+				'r' - open for reading only
+				'w' - open for writing. If file already exists, erase. If not, create.
+				'a' - open file to be written to. All data will be appended to end. If file doesn't exist, create.
+			ex: customer_file = open('customers.txt', 'r')
+			ex: test_file = open(r'C:\Users\Blake\temp\test.txt', 'w') - raw string
+
+	Writing Data to a File
+		somefile.write(string)
+		somefile.close()
+
+	Numbers that are read from files must be converted from strings before being used in math operations.
+
+Handling Exceptions
+	try/except == try/catch in C++, etc.
+
+		try:
+			stuff
+		except ExceptionName:
+			stuff
+
+	A try can include multiple exceptions
+		ex:
+			try:
+				stuff
+			except IOError:
+				stuff
+			except ValueError:
+				stuff
+			except:  # general exception to cover all
+				stuff
+
+	try/except/else - else suite
+
+		try:
+			stuff
+		except ExceptionName:
+			stuff
+		else:
+			stuff
+
+			else is only run if no exceptions
+
+	try/except/finally - finally suite
+
+		try:
+			stuff
+		except ExceptionName:
+			stuff
+		finally:
+			stuff
+
+			finally always runs. Used to perform cleanup operations, like closing files.
+
+Lists and Tuples
+
+	List Slicing
+		list_name[start : end]
+		ex: names[2:4]
+
+	Append
+		list.append(something)
+
+	Insert
+		list.insert(1, 'Bob')
+
+	Sort
+		list.sort()
+
+	Remove
+		list.remove(item)
+
+	Reverse
+		list.reverse()
+
+	Delete
+		del list[1]
+
+	min and max
+		min(list)
+		max(list)
+
+
+Modules and packages
+	
+	Absolute imports
+		ex:
+			import ecommerce.products
+			product = ecommerce.products.Product()
+		or
+			from ecommerce.products import Product
+			product = Product()
+		or
+			from ecommerce import products
+			product = products.Product()
+
+	Relative imports
+		ex:
+			to import from parent package - 
+				from ..database import Database
+
+	Package > Module > Class > Method
+		^ Typical order, though classes can be defined anywhere
+
+
+Third-party libraries
+
+	https://pypi.python.org
+
+	python -m ensurepip
+
+	Use system installers to install third-party libraries
+		venv - virtual environment
+			runs mini Python installation, commands work only in that directory instead of system
+				Keeps 3rd party dependencies separate, prevents conflicts between system- and pip-installed packages
+
+			cd project_directory
+			python -m venv env
+			source env/bin/activate  # on Linux or MacOS
+			env/bin/activate.bat     # on Windows
+
+			Create different venv for each project
+			Store anywhere but preferably in project directory
+				Ignore it in VCS
+
+				First, cd into project directory
+					Then run venv to run environment named 'env'
+						Finally use one of last 2 lines (indicated in above #comments) to activate
+							Must execute that line each time you want to use that particular venv
+								Use comand 'deactivate' when done working on project
+
+
+Properties
+
+	ex:
+		class Silly:
+		    def _get_silly(self):
+		        print("You are getting silly")
+		        return self._silly
+		    def _set_silly(self, value):
+		        print("You are making silly {}".format(value))
+		        self._silly = value
+		    def _del_silly(self):
+		        print("Whoah, you killed silly!")
+		        del self._silly
+		    silly = property(_get_silly, _set_silly,
+		            _del_silly, "This is a silly property")
+
+	Decorators - another way to create properties
+
+		ex:
+			class Silly:
+			    @property
+			    def silly(self):
+			        "This is a silly property"
+			        print("You are getting silly")
+			        return self._silly
+
+			    @silly.setter
+			    def silly(self, value):
+			        print("You are making silly {}".format(value))
+			        self._silly = value
+
+			    @silly.deleter
+			    def silly(self):
+			        print("Whoah, you killed silly!")
+			        del self._silly
+
+
+
+
+
+
+_ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _
+| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | 
+
+
+
+
+Tkinter - T.K. Inter
+	
+	Widgets - window gadgets
+
+		All widgets are actually objects derived from their respective widget classes. 
+		So, a statement such as button = Button(its_parent) actually creates a 
+		button instance from the Button class.
+
+		Each widget has a set of options that decides its behavior and appearance. 
+		This includes attributes such as text labels, colors, and font size. For example, 
+		the Button widget has attributes to manage its label, control its size, change 
+		its foreground and background colors, change the size of the border, and  
+		so on.
+
+		To set these attributes, you can set the values directly at the time of creating 
+		the widget, as demonstrated in the preceding example. Alternatively, you 
+		can later set or change the options of the widget by using the 
+		.config() or .configure() method. Note that the .config() or .configure()
+		methods are interchangeable and provide the same functionality. In fact,  
+		the .config() method is simply an alias of the .configure() method.
+
+	Creating widgets
+
+		2 ways
+
+			1. Create a widget in one line and then add pack() method
+			   (or other geometry manager) in next line:
+			   		label = Label(mainwindow, text="Label widget")
+			   		label.pack()
+
+			2. Or write both lines together:
+					Label(mainwindow, text="Label widget").pack()
+
+		Note that calls to pack() (or other geometry managers) always return None.
+		So, consider a situation where you create a widget, save a reference to it,
+		and add a geometry manager (say, pack()) on the same line, as follows:
+			my_label = Label(...).pack()
+		In this case, you are actually not creating a reference to the widget.
+		Instead, you are creating a None type object for the my_label variable.
+		So, when you later try to modify the widget through the reference, you
+		get an error because you are actually trying to work on a None type object.
+		If you need a reference to a widget, you must create it on one line and then
+		specify its geometry (like pack()) on the second line, as follows:
+			my_label = Label(...)
+			my_label.pack()
+		This is one of the most common errors committed by beginners.
+
+
+		Tkinter includes 21 core widgets, which are as follows:
+
+			Toplevel		Label			Button
+			Canvas			Checkbutton		Entry
+			Frame			LabelFrame		Listbox
+			Menu			Menubutton		Message
+			OptionMenu		PanedWindow		Radiobutton
+			Scale			Scrollbar		Spinbox
+			Text			Bitmap Class	Image Class
+
+				Label(parent, text="Enter your Password:")
+				Button(parent, text="Search")
+				Checkbutton(parent, text="Remember Me", variable=v, value=True)
+				Entry(parent, width=30)
+				Radiobutton(parent, text="Male", variable=v, value=1)
+				Radiobutton(parent, text="Female", variable=v, value=2)
+				OptionMenu(parent, var, "Select Country", "USA", "UK", "India", "Others")
+				Scrollbar(parent, orient=VERTICAL, command= text.yview)
+
+		ttk - themed tk
+			Improves GUI's look and feel
+			from tkinter import ttk
+
+		pack geometry
+
+			most commonly used options:
+
+				side - LEFT, TOP, RIGHT, BOTTOM (alignment)
+				fill - X, Y, BOTH, NONE (ability to grow)
+				expand - Boolean values such as tkiner.YES, tkinter.NO, 1, 0, True, False
+				anchor - NW, N NE, E, SE, SW, W, CENTER (cardinal directions)
+				internal padding - ipadx, ipady
+				external padding - padx, pady (default to zero)
+
+			Most Tkinter geometry manager attributes can 
+			either be specified in capital letters without quotes (such as 
+			side=TOP, anchor=SE) or in small letters within quotes (such as 
+			side='top', anchor='se').
+
+			pack manager is ideally suited for placing widgets - 
+				- top-down
+				- side by side
+				- having widget fill complete container frame
+
+
+
+
+
+
+
+

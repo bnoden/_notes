@@ -1,0 +1,61 @@
+label
+	optional
+	identifies position in memory of the current instruction
+	must choose unique name for each label
+
+opcode
+	specifies processor command to execute
+
+operand
+	specifies where to find the data to execute instruction
+	Thumb instructions have 0-4 operands, separated by commas
+
+comment field
+	optional
+	use ; to separate comments from operand field
+
+
+	Label	Opcode	Operands	Comment
+
+	Func	MOV		R0, #100	; sets R0 to 100
+					BX	LR		; function return
+
+
+	Ra Rd Rm Rn Rt andRt2 represent registers
+	{Rd,} represents an optional destination register
+	#imm12 represents a 12-bit constant, 0 to 4095
+	#imm16 represents a 16-bit constant, 0 to 65535
+	operand2 represents the flexible second operand as described in Section 3.4.2
+	{cond} represents an optional logical condition as listed in Table 2.10
+	{type} encloses an optional data type
+	{S} is an optional specification that this instruction sets the condition code bits
+	Rm {, shift} specifies an optional shift on Rm
+	Rn {, #offset} specifies an optional offset to Rn
+
+	For example, the general description of the addition instruction
+     ADD{cond} {Rd,} Rn, #imm12
+	could refer to either of the following examples.
+     ADD   R0,#1        ; R0=R0+1
+     ADD   R0,R1,#10    ; R0=R1+10
+ 
+	Table 2.4 shows the conditions {cond} that we will use for conditional branching.
+
+	Suffix		Flags				Meaning
+
+	EQ			Z=1					equal
+	NE			Z=0					not equal
+	CS or HS	C=1					higher or same, unsigned ≥
+	CC or LO	C=0					lower, unsigned <
+	MI			N=1					negative
+	PL			N=0					positive or zero
+	VS			V=1					overflow
+	VC			V=0					no overflow
+	HI			C=1 AND Z=0			higher, unsigned >
+	LS			C=0 OR Z=1			lower or same, unsigned ≤
+	GE			N=V					greater than or equal, signed ≥
+	LT			N≠V					less than, signed <
+	GT			Z=0 AND N=V			greater than, signed >
+	LE			Z=1 AND N≠V			less than or equal, signed ≤
+	AL			Can have any value	Always. This is default when no suffix specified
+
+

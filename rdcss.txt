@@ -1,0 +1,48 @@
+.container {
+  width: 50%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.container img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+Note: The example above scales the width of an image/video to the width of a container.
+	If image is larger than the container, the vertical portion of the image will overflow and will not display. 
+		To swap this behavior, set max-height: 100% and width: auto (essentially swapping the values).
+			This scales the height of the image with the height of the container.
+				If image is larger than the container, the horizontal portion of the image will overflow and not display.
+
+Screen Sizes
+
+	Mobile <= 480px
+	Tablet <= 768px
+	Tablet Landscape <= 1024px
+	Laptop <= 1600px
+	Desktop > 1600px
+
+
+@media only screen and (max-width: 480px) {
+  .page-title {
+    width: 270px;
+  }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  .gallery-item .thumbnail {
+    width: 95%;
+  }
+}
+
+@media only screen and (min-resolution: 150dpi) {
+  .logo {
+    background-image: url("../img/spaceship@2x.png");
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+	
+}

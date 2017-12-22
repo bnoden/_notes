@@ -1,0 +1,857 @@
+C++ Notes
+
+Files:
+	ofstream - output file stream
+		ofstream outputFile("file.txt");
+		outputFile << "Write to file just like cout";
+	ifstream - input files stream
+		ifstream inputFile;
+			inputFile.open("file.txt");
+			inputFile.open("C:\\data\\file.txt"); - extra backslash to represent string literal backslash
+			inputFile.close();
+			inputFile >> someString; - reads string from next read position, each string seperated by whitespace (space or newline)
+			int value; inFile >> value; - converts number in file from string to number
+			while (inFile >> value) - read to end of file
+			if (inFile) {something} else {error} - test for file open errors
+				if (infile.fail()) {error} else {something} - alternative to above
+	fstream - file stream - create, write, and read from files
+		ios
+			example: someFile.open("whatever.txt", io::in); - input mode
+					 someFile.open("whatever.txt", io::out); - output mode
+
+			ios::app - Append mode. All output is appended (added to the end) to the file.
+				creates file if it doesnt exist
+			ios::ate - At The End. Goes directly to end of file. Output may be written anywhere in file.
+			ios::binary - Binary Mode. Data are written to or read from file in binary format.
+			ios::in - Input Mode. Data read from file. File created if none exists.
+			ios::out - Output mode. Data written to file. Contents deleted if it already exists.
+			ios::trunc Deletes (truncates) contents if file exists.
+
+			Error Testing - pr12-6 or p668
+				ios::eofbit - end of input stream is encountered
+					eof() - returns true (nonzero) if eofbit flag is set, else false
+
+				ios::failbit - attempted operation failed
+				ios::hardfail - unrecoverable error occurred
+					fail() - returns true (nonzero) if failbit or hardfailbit are set, else false
+
+				ios::badbit - invalid operation has been attempted
+
+				ios::goodbit - none of the above; good condition
+					good() - returns true (nonzero) if goodbit is set, else false
+
+					clear() - clears all above flags if no arguments
+						or call with specific flag as argument
+
+					example:
+						void showState(fstream &file)  { 
+						   cout << "File Status:\n"; 
+						   cout << " eof bit: " << file.eof() << endl; 
+						   cout << " fail bit: " << file.fail() << endl; 
+						   cout << " bad bit: " << file.bad() << endl; 
+						   cout << " good bit: " << file.good() << endl; 
+						   file.clear();     // Clear any bad bits 
+						}
+
+			combine with | 		pr12-20, pr12-21, 12-22 or p698, p699, p700
+				example: someFile.open("whatever.txt", ios::in | ios::out);
+						- write to and read from file, and contents are preserved
+
+		<EOF> - end-of-file marker
+
+		Use same formatting tools as with cout, such as setprecision(), fixed, etc.
+
+	Passing File Stream Objects to Functions - pr12.3 or p666
+
+	getline(dataFile, str, '\n');
+		reads from dataFile, stores to str, stops reading if it encounters \n
+			\n is default delimiter, but you can use anything
+
+	get Member Function - pr12-10 or p675
+		inFile.get(ch);
+
+	put Member Function - pr12-11 or p676
+		outFile.put(ch);
+
+	Work with multiple files
+		ifstream file1, file2, file3; 
+
+	Binary Files
+		file.open("stuff.dat", ios::out | ios::binary);
+
+		write and read Member Functions - pr12-13
+			write
+				fileObject.write(address, size);
+					address is starting address of section of memory to be written to file
+						expected to be char or pointer to char
+					size is number of bytes to write, must be integer value
+				char letter = 'A'; file.write(&letter, sizeof(letter));
+
+				char data[] = {'A', 'B', 'C', 'D'}; file.write(data, sizeof(data));
+
+			read
+				fileObject.read(address, size);
+
+				char letter; file.read(&letter, sizeof(letter));
+
+				char data[4]; file.read(data, sizeof(data));
+
+		Writing Data other than Char to Binary Files - pr12-14
+			must use type cast
+				reinterpret_cast - convert pointer from one type to another
+					reinterpret_cast<dataType>(value)
+						dataType is type converting to
+						value is value youre converting
+
+							example:
+								int x = 65; char* ptr = nullptr; ptr = reinterpret_cast<char*>(&x);
+
+		Creating Records with Structures - pr12-15, pr12-16 or p686, p687
+			Structures may be used to store fixed-length records into a file
+			Always use ios::binary mode when opening a file to store structures
+
+		Random-Access Files - pr12-17, pr12-18 or p691, p692
+			means nonsequentially accessing data in a file
+				-think of a cd player as apposed to cassette
+
+			seekp ("seek put") for output (put into file)
+				file.seekp(20L, ios::beg);
+					-moves files write position to byte number 20
+						(bytes start at 20, so 21st byte)
+
+			seekg ("seek get") for input (get out from file)
+
+			tellp and tellg - pr12-19 or p694
+
+				ios::beg - offest calculated from beginning of file
+				ios::end - offest calculated from end of file
+				ios::cur - offest calculated from current position
+
+					negative offsets move backwards
+						example: file.seekp(−10L, ios::end);
+							-Sets the write position to the 10th byte from the end of the file. 
+
+				Must use clear() before calling seekg or seekp if end-of-file has been read
+
+			"rewind"
+				dataFile.clear(); dataFile.seekg(0L, ios::beg);
+					clear eliminates the need to close and reopen the file each time
+
+
+
+
+
+C-strings - in older versions of C++
+	strObject.c_str() - returns string stored in strObject as a null-terminated C-string
+		Example: inFile.open(filename.c_str());
+
+Reference variables as parameters
+	example: timesTwo(int &num) { num*=2; }
+		if int num = 4, then method(num) == 8
+
+Two or more functions may have the same name, as long as their parameter lists are different.
+	example: int square(int); double square(double);
+	example: int square(int); int square(int, int); int square(int, double);
+
+Range-based for loop:
+	example - int numbers[] = {3,6,9};
+				for (int val : numbers) { cout << val << endl; }
+
+
+Searching and Sorting Arrays
+	Linear Search
+		Also called Sequential Search
+		Searches the array from beginning to end
+		Simple, but inefficient
+	Binary Search
+		Array must be sorted first
+		Same as GuessTheNumber game
+	Bubble Sort
+		inefficient for large arrays
+		void bubbleSort(int arr[],int size){ 
+		   bool swap; int temp; 
+		   do{ 
+		      swap = false; 
+		      for (int i = 0; i < (size - 1); i++) { 
+		         if (arr[i] > arr[i + 1]) { 
+		             temp = arr[i]; arr[i] = arr[i + 1]; arr[i + 1] = temp; swap = true;
+		         } 
+		      } 
+		   } while (swap); 
+		}
+
+	Selection Sort
+		more efficient for larger arrays
+		void selectionSort(int arr[],int size) { 
+	       int start, minIndex, minVal; 
+	       for (start = 0; start < (size − 1); start++) { 
+	           minIndex = start; minVal = arr[start]; 
+	           for(int i = start + 1; i < size; i++) { 
+	               if (arr[i] < minVal) { 
+	                   minVal = arr[i]; 
+	                   minIndex = i; 
+	               } 
+	           } 
+	           arr[minIndex] = arr[start]; arr[start] = minVal; 
+	       } 
+	    } 
+
+Pointers
+	Getting the address of a variable
+		char: 1 byte
+		short: 2 bytes
+		int, long, float: 4 bytes
+		double: 8 bytes
+	A variables address is the address of first byte allocated to it
+		example: int num = 25; &num = address of num, in hexadecimal
+	Do not confuse with reference variables
+
+	Pointer Variables, or just pointers
+		designed to hold memory addresses
+		indirectly manipulate data stored in other variables
+
+	Defining pointer variables:
+		int *ptr;	int means it can hold the address of an int variable
+			the above means "ptr is a pointer to an int"
+			could also be written as int* ptr; to make it clear that its a pointer rather than int
+
+		Always define pointer by initializing with valid memory address
+			nullptr - points to address 0
+				int *ptr = nullptr;
+					with older, non-C++11-compliant compilers, use 0 or NULL
+
+		* is an indirection operator. It dereferences the pointer
+			You are working, not with the pointer variable itself, but with the item it points to
+
+		an array name is really a pointer to the first address of the array
+			arr[i] == *(arr + i)
+
+		Cannot multiply or divide pointers. Can only use +, -, ++, --
+
+	Only use pointers with delete that were previously used with new
+
+	Dynamic Memory Allocation
+		if int *iptr = nullptr;
+			then iptr = new int; tells computer to allocate enough memory for new int variable.
+			 then you could say *iptr = 25;
+
+		Dynamically Allocate an Array - pr9-14 or p524
+			iptr = new int[100];
+				for (int i = 0; i < 100; i++) { iptr[i] = 1; }
+			Dynamically allocated memory should be released when a program is done with it
+				to prevent Memory Leaks
+				
+				delete
+					example: delete iptr;
+						for arrays - delete [] iptr;
+
+						example:
+							void grabMemory(){const int SIZE = 100; int *iptr = new int[SIZE];}
+								above function ends without deleting memory, so the memory sits
+									in that function unused.
+					Only use delete on pointers that were previously used with new
+
+		Returning Pointers from Functions = pr9-15 or p526
+			Make sure the pointer reference still exists
+			You should return a pointer from a function only if it is:
+				A pointer to an item that was passed into the function as an argument
+					or A pointer to a dynamically allocated chunk of memory 
+				
+				example: char *findNull(char *str) {
+							char *ptr = str;
+							while (*ptr != '\0') {ptr++;}
+							return ptr;
+						 }
+
+	Smart Pointers - automatically deletes memory when its done with item
+		introduced in C++11
+
+		#include <memory>
+			unique_ptr	-	pr9-17 or p534
+				unique_ptr<int> ptr(new int);
+			shared_ptr
+			weak_ptr
+
+			pr9-19 or p538-541:
+				arrSelectSort
+				showArrPtr
+				showArray
+
+Character Testing
+	#include <cctype>
+	returns true (nonzero) or false (0):
+		isalpha(char) - letter of alphabet
+		isalnum(char) - alphabet or digit (0-9)
+		isdigit(char) - 0-9
+		islower(char) - lowercase
+		isupper(char) - uppercase
+		isprint(char) - printable character (including space)
+		ispunct(char) - printable character other than digit, letter, or space
+		isspace(char) - whitespace - space , newline '\n', vertical tab '\v', tab '\t'
+
+C-Strings
+	#include <cstring>
+
+	 strlen(str) - length of char array minus null terminator
+
+	 strcat(str1, str2) - concatenate 2 strings
+	 strcpy(charArr, "") - copy a string to a char array
+	 	Safer to use strncat and strncpy:
+	 	strncat(str1, str2, int) - int is max number of str2 chars to append to str1
+	 	strncpy(str1, str2, int) - int is max number of str2 chars to copy to str1
+
+	 strstr(charArr, "") - search for some string inside a char array
+	 strcmp(char *str1, char *str2)
+	 	returns zero if equal
+	 	returns negative if str1 comes BEFORE str2 alphabetically
+	 	returns positive if str1 comes AFTER str2 alphabetically
+
+	 Numeric Conversion Functions
+
+	 	atoi("12345") - converts C-string to integer
+	 	atol("9999999") - converts C-string to long integer
+	 	atof("12.345") - converts C-string to double, can use as float
+
+	 	to_string(num) - converts number to string
+
+Structured Data
+	struct
+		struct Tag {}; Remember the semicolon
+			capitalize first letter of name (tag)
+
+		Initialization List - example:
+			struct City {string name; string state;};
+				City city = {"Dallas", "TX"};
+
+		Dereference a struct variable with -> instead of *
+			example:
+				Circle *cirPtr = nullptr; cirPtr = new Circle; cirPtr->radius = 10;
+
+	Union
+		union Tag {};
+			union {}; - Anonymous union
+		Like a structure, but all members occup the same memory area
+			So only one member can be used at a time
+				They conserve memory
+
+		If global, must be declared static.
+			static union Tag {};
+
+	Enumerated Data Type
+		enum Name {ONE, TWO, THREE, FOUR};
+			or enum Water {FREEZING = 32, BOILING = 212}; 	to assign values explicitly
+			or enum Car {FORD, CHEVY, JEEP} someCar, anotherCar; 	to define variables at same time
+				notice theres no semicolon until after variables
+			
+		static_cast<Name>(ONE+1);	- to use enums like regular ints
+
+		Must be unique within same scope unless strongly typed:
+			Strongly Typed enums:
+				enum class Name {ONE, TWO, THREE};
+				enum class Name2 {TWO, FOUR, SIX}
+					CAN use same enum names within scope
+						Name name = Name::TWO;
+						Name2 bob = Name2::TWO;
+
+					enum class Day : char { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY };
+					enum class Water : unsigned { FREEZING = 32, BOILING = 212 };
+
+						static_cast<int>(Name::TWO) to retrieve underlying integer value
+
+
+Classes
+
+	members are PRIVATE by default, unlike structures
+	dont forget semicolon at the end of class
+	class names should start with uppercase
+
+	use const for values that shouldnt be changed outside the function
+		Good practice to mark all accessor functions as const
+		example:
+			double getWidth() const;
+				double Rectangle::getWidth() const
+					{ return width; }
+					
+					:: is called scope resolution operator
+
+	Avoid Stale Data - p730
+		example: instead of member variable double area, use double getArea() const;
+			-because it is dependent on length and width, which may change
+
+	Pointers to Objects - pr13-3
+
+		example:
+			Rectangle *rectPtr = nullptr; // Define a Rectangle pointer. 
+			rectPtr = new Rectangle; // Dynamically allocate a Rectangle object. 
+			rectPtr->setWidth(10.0); // Store values in the object's width and length. 
+			rectPtr->setLength(15.0); 
+			delete rectPtr; // Delete the object from memory. 
+			rectPtr = nullptr;
+
+		Using Smart Pointers to Allocate Objects - self-deleting - pr13-4
+			#include <memory>
+				unique_ptr<Rectangle> rectanglePtr(new Rectangle);
+
+	Separate Class Specification from Implementation
+		Use three separate files: - pr13-5, Appendix M
+			1. class declaration header file
+				aka class specification file
+					ClassName.h or Rectangle.h
+						#ifndef - if not defined - if (!defined)
+							-include guard - prevents header file from being included more than once
+						#define - define - include the following lines - {define()}
+						#endif - end if - ;
+								
+								so if (!defined) {define()}end;
+
+			2. member function definitions
+				aka class implementation file
+					ClassName.cpp or Rectangle.cpp
+			3. program that uses the class
+				#include "ClassName.h"
+					use <> for system header files located in compilers INCLUDE FILE DIRECTORY
+						-where all the standard C++ header files are located
+
+		Inline Member Functions - p745
+			-written inside a class declaration, when member function is small
+
+
+	Constructors - pr13-6 or p746
+		initialization routines
+		useful for initializing member variables or performing other setup functions
+			initialize data members to valid values before those members are used by other code
+
+		class Rectangle {
+		public:
+			Rectangle(); // constructor
+		};
+		Rectangle::Rectangle() {
+			// Do stuff
+		}
+			-no return type
+
+		Passing arguments to constructors - pr13-9 or p750
+			default arguments - pr13-10 or p756
+
+		Default constructor has no arguments
+			If all constructors require arguments, there is not default constructor
+				-and you must pass the required arguments when creating object
+
+	Destructors - pr13-11 or p758
+		~ClassName(); - class name preceded by tilde ~
+
+	Overloading Constructors - pr13-13 or p762
+		Can have constructors with same name if arguments are different
+			same thing with member functions
+		But only 1 default constructor and one destructor
+
+
+	Private Member Functions
+		may only be called from a function that is a member of the same class
+		 for internal use within the class 
+
+	Protected Members - pr15-3, GradedActivity version 2 or p900
+		-like private but may be accessed by derived classes 
+
+	Access Specification:	p904, p905
+		private
+			Private members of the base class are inaccessible to the derived class. 
+			Protected members of the base class become private members of the derived class. 
+			Public members of the base class become private members of the derived class. 
+		protected
+			Private members of the base class are inaccessible to the derived class. 
+			Protected members of the base class become protected members of the derived class. 
+			Public members of the base class become protected members of the derived class. 
+		public
+			Private members of the base class are inaccessible to the derived class. 
+			Protected members of the base class become protected members of the derived class. 
+			Public members of the base class become public members of the derived class. 
+	
+			Base class constructor is called before the derived class constructor
+			Destructors are called in reverse order
+
+		Passing Arguments to Base Class Constructors - pr15-5 or p907, p908
+
+		Redefining Base Class Functions - pr15-7, pr15-8 or p918
+			Base class member functions may be redefined in a derived class 
+				-when a derived class has a function with the same name as a base class function 
+					-objects of the base class type will still call the base class version of the function
+
+		Polymorphism and Virtual Member Functions - pr15-10, pr15-13 or p929
+			requires reference or pointers 
+			binding	- p930
+
+			Place virtual keyword online in function declaration or prototype
+
+			base class pointers and references only know about base class members - p939
+
+			virtual destructors - pr15-15, pr15-16 or p940
+				If class with destructor could become base class, declare the destructor virtual 
+					Else the compiler will perform static binding on the destructor 
+
+			override and final key words - pr15-17 or p943
+				override - pr15-18
+
+				final - virtual member function cannot be overridden by other classes 
+					ex: virtual void message() const final;
+
+		Abstract Base Classes and Pure Virtual Functions - pr15-19, Student.h or p945
+
+			When a class contains a pure virtual function, it is an abstract base class. 
+			Pure virtual functions are declared with the = 0 notation. 
+			Abstract base classes cannot be instantiated. 
+			Pure virtual functions have no body, or definition, in the base class. 
+			A pure virtual function must be overridden at some point in a derived class
+				-in order for it to become nonabstract.
+
+		Multiple Inheritance - pr15-20 or p952
+			when a derived class has 2 or more base classes 
+				ex: class DateTime : public Date, public Time
+
+
+
+	Arrays of Objects - pr13-14 or p767
+
+	UML - Unified Modeling Language - p786
+		Class Name
+		Member Variables : data type
+		Member Functions : data type
+		"-" means private 
+		"+" means public 
+
+			example:
+				Rectangle 
+				- width : double
+				- length : double
+				+ Rectangle() // constructor
+				+ setWidth(w : double) : void
+				+ setLength(len : double) : void
+				+ getWidth() : double
+				+ getLength() : double
+				+ getArea() : double
+
+	Instance and Static Members - p811
+		instance members require an instance of the class
+		 -while static members are shared amongst all instances, can be called directly from the class 
+		 	only 1 copy of static variable is saved into memory
+
+		 instance: Circle circle; circle.pi();
+		 static: Circle::pi();	- note the :: when calling static members directly from the class 
+
+	Friends of Classes - p819
+		-functions or classes that have access to private members from another class 
+			example: friend double Rectangle::getLength();
+
+		forward declaration - pr14-4 or p821
+			-put in class.h file before class declaration
+				class Rectangle;
+				class Circle {};
+
+		only declare friends when necessary
+
+	Memberwise Assignment - p824
+		Circle c1(5); Circle c2;
+			c2 = c1;
+				or just Circle c2 = c1;
+
+			-works just like other variables (except arrays)
+
+	Copy Constructors p825
+		Called when a new object is created and initialized with another objects data
+
+		example:
+			// use const to make sure it can't change the value of the parameter
+			Circle(const Circle &obj) {		// parameter must be a reference object
+				radius = obj.radius;
+			}
+
+		If no copy constructor, a default copy constructor is created, which uses memberwise assignment (obj2 = obj1)
+
+	Operator Overloading - StudentTestScores v3, pr14-6 or p832, p834
+		example:
+		// function name is "operator =", could put spaces around operator "void operator = ()"
+			// right refers to the right side of the operator, but can have any name
+				// need not be reference but it's safer
+		void operator=(const studentTestScores &right) {
+			delete [] testScores;
+			studentName = right.studentName;
+			numTestScores = right.numTestScores;
+			testScores = new double[numTestScores];
+			for (int i = 0; i < numTestScores; i++)
+				testScores[i] = right.testScores[i];
+		}
+
+			student2 = student1;
+				is the same as
+			student2.operator=(student1);
+
+		the this pointer - pr14-7 or p836
+			this - always points to the instance of the class making the function call 
+				example: circle2.getRadius(this) == circle2.getRadius(student1)
+
+				note: this is passed as a hidden argument to all nonstatic functions
+
+	Overloading Math Operators	-	pr14-8 or p838
+
+		Operators that can be overloaded:
+			+	-	*	/	%	^	&	|	~	!	=	<	>
+			+=	-=	*=	/=	%=	^=	&=	|=	<<	>>	>>=	<<=	==
+			++	--	!=	<=	>=		&&	||	_>*	,	_>	[]	()
+			new 	delete
+
+		Cannot be overloaded:
+			?:	.	.*	::	sizeof
+
+		Overloading the Prefix and Postfix ++ Operators 	-	pr 14-9 or p843
+
+		Overloading the << and >> operators 	-	pr14-11 or p848
+
+		Overloading the [] operator 	-	pr14-12 or p852
+			write classes that have array-like behaviors
+
+	Object Conversion 	-	pr14-4 or p858
+
+	Aggregation	- pr14-15 or p860
+		-when a class contains an instance of another class 
+
+	Class Collaborations - pr14-16 or p865
+		CRC cards - p868
+
+
+Exception Handling
+	throw
+	try/catch	pr16-1 or p972
+		try {
+		}
+		catch() {
+		}
+
+	Exception Handling with Classes - pr16-2, Rectangle.h, Rectangle.cpp version 1 or p975
+	Multiple Exceptions - pr16-3, Rectangle v3 or p978
+	Recover from errors - pr16-4 or p982
+		bool tryAgain = true; // Flag to reread input
+
+			while(tryAgain) {
+				try {}
+				catch() {}
+			}
+
+	Extract data from exception class pr16-5 or p983
+
+	bad_alloc - pr16-6 or p988
+
+Templates
+
+	Function Templates - pr16-7, pr16-8 or p990
+		ex:
+		template <class T>	// T is type parameter
+		T square(T number) { return number*number;}
+
+		All type parameters defined in a function template must appear at least once in the function parameter list
+		Templates should be placed near top of program or header file 
+
+		Function templates with multiple types - pr16-9 or p994
+			template <class T1, class T2> int largest(const T1 &var1, T2 &var2) { }
+
+		Overloading with function templates - pr16-10 or p 995
+
+		often easier to convert an existing function than to write a template from scratch - p996
+
+	Class Templates - p996
+		
+		defining objects - pr16-11 or p1000
+			SimpleVector<int> intTable(10); 
+			SimpleVector<double> doubleTable(10); 
+
+		inheritance - pr16-12 or p1002
+			class SearchableVector : public SimpleVector<T> {}
+			SearchableVector() : SimpleVector<T>() 
+			SearchableVector(int size) : SimpleVector<T>(size) 
+
+		specialized class templates - p1004
+			in declaration, use actual data type instead of T parameter 
+				class SimpleVector<char *> {}
+
+
+STL (Standard Template Library)
+	containers and iterators - p1006
+
+		Containers - pr16-13
+			sequence containers - p1006
+				organizes data in a sequential fashion, similar to an array
+					vector - expandable array
+					deque - like vector, but value can be added to or removed from the front
+					list - double linked list of data elements. can add values to or remove them from any position
+
+			associative containers
+				organizes data with keys, which allow rapid, random access to elements stored in container
+					set - stores a set of keys. no duplicates
+					multiset - like set but allows duplicates
+
+					map - maps a set of keys to data elements. one key per element, no duplicates
+					multimap - allows many keys, allows duplicates
+
+		Iterators - pr 16-14 or p1006, p1007
+			generalizations of pointers, used to access data stored in containers 
+
+			Forward - can only move forward (++)
+			Bidirectional - moves forward or backward (++ and -)
+			Random-access - moves forward, backward, and can jump to specific element 
+			Input - used with input stream to read data from input device or file 
+			Output - used with output stream to write data from output device or file
+
+				Iterators  are  associated  with  containers.  The  type  of  container  you  have  determines  the  
+				type of iterator you use. For example, vectors and deques require random-access iterators, while  
+				lists, sets, multisets, maps, and multimaps require bidirectional iterators. 
+
+	STL Algorithms - pr16-15, pr16-16, pr16-17 or p1007, 1013
+
+		binary_search
+		count -	pr 16-16
+		find - pr 16-18
+		for_each - pr16-19
+		max_element - pr16-17 
+		min_element
+		random_shuffle
+		sort 
+
+
+
+
+	STL vector
+		#include <vector> (must have using namespace std;)
+			vector<int> numbers;
+			vector<int> numbers(10); to define starting size
+			vector<int> numbers(10, 2); to define starting size of 10, each element initialized to 2
+			vector<int> set2(set1); initializes set2 by copying set 1 to it
+			vector<int> numbers { 10, 20, 30, 40 }; initializes vector with list of values
+				no need for equals sign like array: int numbers[] = { 10, 20, 30, 40 };
+				numbers[i] can be replaced with new value
+			Rang-based for loops is same as array:
+				vector<int> numbers { 3, 6, 9};
+					for (int val : numbers) { cout << val << endl; }
+
+			push_back
+				numbers.push_back(25); puts 26 in last element, or adds as new element if full
+			pop_back
+				numbers.pop_back(); removes the last element
+			clear
+				numbers.clear(); clears all elements
+			empty
+				if (numbers.empty()) determines if vector is empty
+			size
+				x = numbers.size(); x = size of vector
+			at
+				x = numbers.at(5); x = the value of the 6th element (an array would be numbers[5])
+			reverse
+				numbers.reverse(); reverses the order of elements
+			resize(elements, value)
+				numbers.resize(5, 1); increases size by 5 and initializes the new elements to 1
+			swap(vector2)
+				set1.swap(set2); swaps contents of set1 with set2
+
+			operator[] - allows array-like access of existing vector elements
+			capacity() - returns maximum number of elements vector can store without more memory 
+			front() - first element of vector 
+			end() - last element of vector 
+			erase() - remove that element 
+				erase(i1, i2) - erase all elements from i1 to i2
+			insert(i, val) - insert value into vector 
+
+
+
+		holds a sequence of values, or elements
+		stores its elements in contiguous memory locations
+		you can use array subscript operator [] to read individual elements in the vector
+			cannot use it to access element that does not yet exist
+
+		Advantages over arrays:
+			You dont have to declare the number of elements it will have
+			If you add a value to a vector thats already full, it will automatically increase size
+			Vectors can report the number of elements they contain
+
+Linked Lists 
+
+	struct ListNode {
+		double value;
+		ListNode *next;		// self-referential data structure
+	};
+	ListNode *head;
+	NumberList() {
+		head = nullptr;
+	}
+	
+		Appending node to list - pr17-1 or p1028
+		Traversing a linked list - pr17-2 or p1033, p1034
+		Inserting a node - pr17-3 or p1035
+		Deleting a node - pr17-4 or p1039
+		Destroying the list - p1042, p1043
+
+	Linked List Template - pr17-5, LinkedList.h v1 or p1043
+
+		Using a class node type - LinkedList.h v2 or p1049, p1050
+
+	doubly linked list and circular linked list - p1055
+
+	The STL list Container - pr17-6 or p1056
+		list.back() - return reference to last element in list
+		list.empty() - return true if list is empty, else false 
+		list.end() - return a bidirectional iterator to end of list 
+		list.erase(i)			remove i 
+			list.erase(i1, i2)	remove all elements from i1 to i2
+		list.front() - return reference to first element of list 
+		list.insert(i, el) - insert element into list at i
+		list1.merge(list2) - insert all items in list2 to list1. list1 expands if need be. assumes both are sorted.
+		list.pop_back() - remove last element 
+		list.pop_front() - remove first element 
+		list.push_back(x) - insert element with value x at end of list 
+		list.push_front(x) - insert element with value x at beginning of list 
+		list.reverse() - reverse the order in which elements appear in list 
+		size - return number of elements in list 
+		list1.swap(list2) - swaps the elements between the two lists 
+		list.unique() - remove any element that has the same value as the one before it 
+
+
+Stacks and Queues
+	
+		Static Stack Class - pr18-1, IntStack.h, IntStack.cpp or p1065
+		Static Stack Template - pr18-3, Stack.h or p1074
+
+	Dynamic Stacks - pr18-4, DynIntStack or  p1080
+		Dynamic Stack Template - pr18-5, DynamicStack.h or p1085
+
+	STL stack Container - pr18-6 or p1091
+
+
+	STL deque and queue Containers - p1113
+
+
+Recursion
+
+	Recursive functions - pr19-3 or p1126, p1127 
+		count chars - pr19-4 or p1130
+
+	Direct - function calls itself 
+	Indirect - a calls b, which calls a, etc.
+	
+
+Binary Trees 
+	pr IntBinaryTree.h or p1159
+		struct TreeNode {
+			int value;
+			TreeNode* left;
+			TreeNode* right;
+		};
+
+	Traversing the tree - pr20-2 or p1162, p1163 
+		Inorder - current nodes left subtree traversed, data processed, right subtree traversed
+		Preorder - current nodes data processed, left subtree traversed, right subtree traversed 
+		Postorder - left traversed, right traversed, data processed
+
+	Searching the tree - pr20-3 or p1165
+
+	Deleting a node - pr20-4 or p1166
+
+	Templates - BinaryTree.h or pr20-5 or p1175
+		must support the <, >, and == operators 
+

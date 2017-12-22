@@ -1,0 +1,66 @@
+
+A promise can be:
+
+fulfilled - The action relating to the promise succeeded
+rejected - The action relating to the promise failed
+pending - Hasn't fulfilled or rejected yet
+settled - Has fulfilled or rejected
+
+
+const qs = e => document.querySelector(e);
+const qsa = e => document.querySelectorAll(e);
+
+const kept = () => console.log('success');
+const broken = () => console.log('broken');
+
+const doSomething = () => {
+  document.body.style.display = 'none';
+};
+
+let promise = doSomething().then(kept, broken);
+
+function doSomething(_time) {
+  return new Promise(function(kept) {
+    return setTimeout(kept, _time);
+  });
+}
+function logHi() {
+  qs('.promise').innerHTML = '<h1>YOU BROKE THE PROMISE</h1>';
+  console.log('congrats');
+}
+doSomething(2000).then(logHi);
+
+new Promise(function(resolve, reject) {
+  setTimeout(() => resolve(1), 2000);
+})
+  .then(result => {
+    alert(result);
+    return result + 2;
+  })
+  .then(result => {
+    throw new Error('FAILED HERE');
+    alert(result);
+    return result + 2;
+  })
+  .then(result => {
+    alert(result);
+    return result + 2;
+  }).catch((e) => {
+  console.log('error: ', e)
+});
+
+
+img1.callThisIfLoadedOrWhenLoaded(function() {
+  // loaded
+}).orIfFailedCallThis(function() {
+  // failed
+});
+
+// and…
+whenAllTheseHaveLoaded([img1, img2]).callThis(function() {
+  // all loaded
+}).orIfSomeFailedCallThis(function() {
+  // one or more failed
+});
+
+

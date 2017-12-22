@@ -1,0 +1,80 @@
+
+
+isomorphic: the same code can run on both server and the browser.
+
+Node.js has an asynchronous, event-driven, non-blocking input/output (I/O) model, as 
+opposed to using threads to achieve multitasking.
+		-Most languages depend on threads to do things simultaneously.
+		Threads give the feeling of simultaneousness by letting other pieces of code run while 
+		one piece waits (blocks) for some event to complete.
+				This means that you write your code sequentially.
+						Node.js, on the other hand, has no threads. It relies on callbacks
+						to let youknow that a pending task is completed. 
+
+The Express framework lets you define routes, specifications of what to do when a 
+HTTP request matching a certain pattern arrives. The matching specification is regular 
+expression (regex) based 
+
+MongoDB is a NoSQL document-oriented database, with a flexible schema and a JSON-based query language.
+				- scales vertically (can index deeply nested fields), sacrifices consistency.
+				- document oriented
+				- ORM - object relational mapping
+				- schema-less
+				- uses JavaScript/JSON (JavaScript Object Notation), rather than SQL (Structured Query Language)
+						- natively stored in BSON (Binary JSON), which saves space
+
+		Mongoose - document-mapping library
+
+		SQL = relational database
+		NoSQL = non-relational database			
+
+				CAP theorum - https://en.wikipedia.org/wiki/CAP_theorem
+					states that it is impossible for a distributed data store to simultaneously provide more than
+					two out of the following three guarantees: consistency, availability, partition tolerance
+
+						Consistency - Every read receives the most recent write or an error
+						Availability - Every request receives a (non-error) response – without guarantee that it
+													 contains the most recent write
+						Partition tolerance - The system continues to operate despite an arbitrary number of messages
+																	being dropped (or delayed) by the network between nodes
+
+
+Imperative vs Declarative
+				- React is declarative
+
+	Imperative - describe how things work
+
+	Declarative - describe what you want to achieve
+			- avoids creating/mutating state
+			- fewer bugs, more maintainability
+
+			Imperative:
+						const toLowerCase = input => {
+						  const output = []
+						  for (let i = 0; i < input.length; i++) {
+						    output.push(input[i].toLowerCase())
+						  }
+						  return output
+						}
+
+			Declarative:
+					const toLowerCase = input => input.map(value => value.toLowerCase())
+
+				Pure function - returns a value that is computed based on its arguments.
+						- testable
+						- in React, the UI is expressed with pure functions
+
+						1. The function should take in at least one argument.
+						2. The function should return a value or another function.
+						3. The function should not change or mutate any of its arguments.
+
+
+				1. Keep data immutable.
+				2. Keep functions pure — accept at least one argument, return data or another function.
+				3. Use recursion over looping (wherever possible).
+
+
+
+
+
+

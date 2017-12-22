@@ -1,0 +1,30 @@
+
+4 majors features of Express:
+	Middleware
+	Routing
+	Extensions
+	Views
+
+				Middleware
+						—In contrast to vanilla Node, wher
+						e your requests flow through only
+						one  function,  Express  has  a  middleware
+						stack,  which  is  effectively  an  array  of
+						functions.
+
+				Routing
+						—Routing is a lot like middleware, but the functions are called only when
+						you visit a specific URL with a specific HTTP method. For example, you could only
+						run a request handler when the browser visits yourwebsite.com/about.
+
+				Extensions to request and response objects
+						—Express extends the request and response
+						objects with extra methods and prop
+						erties for developer convenience.
+
+				Views
+						—Views  allow  you  to  dynamically  render  
+						HTML.  This  both  allows  you  to change the 
+						HTML on the fly and to write the HTML in other languages.
+
+

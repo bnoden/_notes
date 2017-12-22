@@ -1,0 +1,24 @@
+
+https://docs.djangoproject.com/en/1.11/intro/tutorial01/
+
+
+Setup
+
+	In cmd, from root (d:\000\_dj\):
+
+		Create virtual environment:
+			virtualenv env_dj01
+
+		Activate env, repeat later reactivate:
+			env_dj01\scripts\activate
+
+		Install django into virtual env:
+			pip install django==1.8.13
+
+		Create directory:
+			django-admin startproject dj01
+
+			manage.py - cli utility t o interact with project
+				https://docs.djangoproject.com/en/1.8/ref/django-admin/
+
+

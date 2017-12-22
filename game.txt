@@ -1,0 +1,158 @@
+mcshaffry.com/gamecode
+courseptr.com/downloads
+code.google.com/p/gamecode4
+
+STL - Standard Template Library.
+	STLport - A portable, optimized implementation of STL
+Boost - Powerful data structures and algorithms library, designed in the style of STL.
+	Online docs are great place to learn about computer science
+Loki - Powerful generic programming template library
+
+g: Use with global variables — g_Counter
+m: Use with member variables — m_Counter
+p: Use with pointer variables — m_pActor
+V: Use with virtual functions — VDraw()
+I: Use with Interface classes — class IDrawable
+
+Avoid multiple inheritance of noninterface classes.
+
+Variables and Parameters: Always start with lowercase and use a capital letter
+for each compound word—g_BufferLength, m_BufferLength, returnValue.
+
+Classes, Functions, Typedefs, and Methods: Always start with uppercase and
+capitalize each compound word-- SoundResource, MemoryFile.
+
+Macros & Constants: Use all caps and seperate compound words with
+underscores -- SAFE_DELETE, MAX_PATH.
+
+Every subsystem in a game has 3 primary categories:
+	Application Layer
+		Hardware and OS
+	Game Logic Layer
+		Game state
+			Physics system
+	Game View Layer
+		Graphics and sound
+
+Game engine layers:
+	OS
+	SDKs:
+		Graphics:
+			Glide
+			OpenGL
+			DirectX
+			libgcm
+			Ege
+		Rigid body dynamics (physics):
+			Havok
+			PhysX
+			ODE (Open Dynamics Engine)
+		Character Animation:
+			Granny
+			Havok Animation
+			Edge
+		Biomechanical Character Models:
+			Endophin and Euphoria
+	Platform independence layer
+	Core systems layer
+		Assertions - Lines of error-checking code. Usually stripped before production.
+		Memory management
+		Math library
+		Custom data structures and algorithms
+	Resources
+	Rendering Engine
+	Scene Graph/Culling Optimizations
+
+Profiling and debugging tools
+	VTune by Intel
+	Quantify and Purify by IBM
+	Bounds Checker by Compuware
+
+Collision and Physics
+	Havok - the gold standard in the industry
+	PhysX - integrated into Unreal4
+	ODE (Open Dynamics Engine) - open source
+		Other open source engines: I-Collide, V-Collide, RAPID
+
+Human Interface Device (HID)/ Player I/O
+	keyboard, mouse, joypad, steering wheel, fishing rod, dance pad, guitar
+
+Design for multiplayer or networked multiplayer from the beginning if you wish to have it!
+
+Pitfalls:
+	Hidden code that performs nontrivial operations
+		Avoid copy constructors and operator overloads that perform nontrivial operations.
+		Any operation with some meat to it should be called explicitly.
+	Keep your class hierarchies as flat as possible
+		Each class should have one responsibility and should have inheritance trees no more than 2 or 3 levels deep.
+		Avoid the Blob class - which does a little bit of everything and is unfocused.
+		Start with an interface class, with 2 or 3 levels of inheritance.
+	Inheritance vs Composition
+		Inheritance - object evolves from another object or child object IS a version of parent object
+		Composition - object made of multiple discrete components, or an aggregate object HAS a version of the contained object
+	Abusing virtual functions
+		override - keyword that tells the compiler that you're overriding a virtual function from the base class
+		sealed - keyword that tells the compiler that subclasses aren't allowed to override the virtual function anymore
+		If you change something that's in wide use, change its name, too. Then you'll be forced to look at how the original was put to use.
+	Use interface classes and factories
+		Interface Class - contains nothing but pure virtual functions
+			Forms top level in any class hierarchy
+		Factories - enforce orderly construction of complicated objects
+	Encapsulate components that may change
+	Use streams in addition to constructors to initialize objects
+
+Use smart pointers, not naked pointers
+	You can't have 2 different objcets manage smart pointers for each other
+	When you create a smart pointer, make sure it's created straight from a raw pointer new operator
+Use reference counting for memory management
+	AddRef() and Release()
+	shared_ptr
+
+RNG
+	Mersenne Twister pseudorandom number generator
+		developed by Takuji Nishimura and Makoto Matsumoto
+		GCCRandom class
+		example usage:
+			GCCRandom r;
+			r.Randomize();
+			unsigned int num = r.Random(100); // returns a number from 0-99, inclusive
+		You should use multiple intantiations, each for different aspects of game.
+
+	Pseudo-random traversal of a set
+		Skip = RandomA*(members*members)+(RandomB*members)+RandomC
+			nextMember+=skip;
+			nextMember%=prime;
+				In the above code, you traverse the entire set exactly once, in pseudo-random order
+
+Memory Pools
+
+Directory Structure
+	Docs
+		reference for dev team
+		design docs and tech specs
+	Assets
+		art, animation, sound, etc. in raw form
+		not used by game directly, imported to Game when finished
+	Source
+		source code
+		solution file or makefile, named according to project code word
+	Temp
+		debug code files, build files
+	Lib
+	Game
+		release build and every game data file needed to run and test game
+		no sensitive material
+	Test
+		special files only for test team
+		test scripts, cheats, test utilities
+		test logs
+		release notes for latest build - list of features that work or don't work
+
+Setting Visual Studio Build Options p104
+Multiplatform Projects p108
+
+
+Avoid dreaded Diamond of Death
+Avoid Multiple Inheritance
+	unless every base class has nothing but pure virtual functions
+	
